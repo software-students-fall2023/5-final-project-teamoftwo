@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Feedback</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% for message in get_flashed_messages() %}
+        <div class="flash-message">{{ message }}</div>
+    {% endfor %}
+    <header>
+        <div id="branding">
+            <h1><a href="/">Customer Feedback System</a></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/feedback">Submit Feedback</a></li>
+                <li class="current"><a href="/view-feedback">View Feedback</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>Customer Feedback</h1>
+        {% for feedback in feedbacks %}
+            <p>{{ feedback.feedback_text }}</p>
+        {% endfor %}
+    </div>
+    <footer>
+        <p>Customer Feedback System &copy; 2023</p>
+    </footer>
+</body>
+</html>
