@@ -1,0 +1,49 @@
+name: Flask App CI/CD
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo
+        ports:
+          - 27017:27017
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        cd flask-app
+        pip install -r requirements.txt
+
+    - name: Run tests
+      run: |
+        cd flask-app
+        pytest
+
+    - name: Build and push Docker image
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+      uses: docker/build-push-action@v2
+      with:
+        context: ./flask-app
+        file: ./flask-app/Dockerfile
+        push: true
+        tags: snocookies/flask-app:latest
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    # Add deployment steps to Digital Ocean here !!!
