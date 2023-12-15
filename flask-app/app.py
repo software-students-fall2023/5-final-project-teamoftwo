@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Needed for flash messages
 
 # MongoDB setup (adjust the URI as needed)
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient("mongodb://mongo:27017/")
 db = client["customer_feedback_db"]
 feedback_collection = db["feedback"]
 
